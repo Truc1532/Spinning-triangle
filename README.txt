@@ -19,4 +19,7 @@ Next run the autogen.sh:
 If the configuration ended successfully you can run the makefile:
    make
 
-That is all. Enjoy !
+Lastly enter:
+  sudo make install
+
+Now you can enter 'Spinning_triangle' in the terminal (no matter which directory) to run the program !
