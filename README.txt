@@ -1,4 +1,5 @@
 ---DEPENDENCIES---
+  OpenGL (renderer alteast 4.6)
   GL dev library (atleast 1.2)
   GLEW dev library (atleast 2.2)
   SDL2 dev library (atleast 2.0)
