@@ -89,13 +89,13 @@ void createRotationMatrix(float angleX, float angleY, float angleZ, float* matri
 
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        fprintf(stderr, "Failed to initialize SDL\n");
+        fprintf(stderr, "SDL2: %s\n", SDL_GetError());
         return -1;
     }
 
     SDL_Window* window = SDL_CreateWindow("Spinning 3D Triangle", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     if (!window) {
-        fprintf(stderr, "Failed to create SDL window\n");
+        fprintf(stderr, "SDL2: %s\n", SDL_GetError());
         return -1;
     }
 
@@ -105,9 +105,10 @@ int main() {
         return -1;
     }
 
+    GLenum glewError = glewInit();
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
-        fprintf(stderr, "Failed to initialize GLEW\n");
+        fprintf(stderr, "OpenGL: %s\n", glewGetErrorString(glewError));
         return -1;
     }
 
@@ -146,6 +147,9 @@ int main() {
 
     int running = 1;
     float angleX = 0.0f, angleY = 0.0f, angleZ = 0.0f;
+    float frameCount = 0;
+    float elapsedTime = 0.0f;
+    Uint32 lastTime  = SDL_GetTicks();
     while (running) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -170,6 +174,15 @@ int main() {
         glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 
         SDL_GL_SwapWindow(window);
+
+        frameCount++;
+        Uint32 currentTime = SDL_GetTicks();
+        elapsedTime += currentTime - lastTime;
+        lastTime = elapsedTime;
+        if (elapsedTime >= 3000.0f) {
+            printf("%.2fFPS\n", frameCount / (elapsedTime / 1000.0f));
+            frameCount = 0;
+            elapsedTime = 0.0f;
     }
 
     glDeleteVertexArrays(1, &VAO);
